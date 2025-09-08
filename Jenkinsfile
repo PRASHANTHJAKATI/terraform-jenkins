@@ -1,6 +1,14 @@
 pipeline {
     agent any
 
+    parameters {
+        choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'Terraform action to perform')
+    }
+
+    environment {
+        TF_IN_AUTOMATION = "true"   // avoid interactive prompts
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -8,24 +16,25 @@ pipeline {
             }
         }
     
-        stage ("terraform init") {
+        stage('Terraform Init') {
             steps {
-                sh ("terraform init -reconfigure") 
+                sh 'terraform init -reconfigure'
             }
         }
         
-        stage ("plan") {
+        stage('Terraform Plan') {
             steps {
-                sh ('terraform plan') 
+                sh 'terraform plan'
             }
         }
 
-        stage (" Action") {
+        stage('Terraform Action') {
             steps {
-                echo "Terraform action is --> ${action}"
-                sh ('terraform ${action} --auto-approve') 
-           }
+                echo "Terraform action is --> ${params.ACTION}"
+                sh "terraform ${params.ACTION} -auto-approve"
+            }
         }
     }
 }
+
     
