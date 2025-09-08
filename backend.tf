@@ -1,8 +1,9 @@
 terraform {
   backend "s3" {
-    bucket = "naresh-aws-test"
-    key = "terraform.tfstate"
-    region = "us-east-1"
-    dynamodb_table = "DynamoDbLock"
+    bucket         = "my-terraform-bucket"
+    key            = "state/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform-locks"   # optional, for state locking
+    
   }
 }
